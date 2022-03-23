@@ -1,7 +1,6 @@
-# Meltano x dbt Jaffle
+# Meltano x dbt Jaffle Shop
 
 This project is based on the dbt's classic [Jaffle shop example project](https://github.com/dbt-labs/jaffle_shop) but in a Meltano context.
-
 
 ### What is this repo?
 
@@ -124,7 +123,7 @@ Also this creates an Airflow users called `melty`.
     To kill the background Airflow processes run:
 
     ```bash
-    pkill -f airflow || true
+    pkill -f airflow
     ```
 
 1. Generate and serve your the dbt docs.
