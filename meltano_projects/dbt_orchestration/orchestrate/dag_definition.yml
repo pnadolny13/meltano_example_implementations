@@ -1,0 +1,22 @@
+dags:
+  generator_configs:
+    dbt:
+      default_target: "target-postgres"
+      stream_level: true
+  dag_definitions:
+    # Example DAGs to show how you might want to schedule different models in a more precise way
+    full_dag:
+      # Weekends - Full DAG once a day end to end
+      generator: dbt
+      interval: '0 0 * * 6,0'
+      selection_rule: '*'
+    orders:
+      # Orders consumption model and all upstream, every 2 hrs only on weekdays
+      generator: dbt
+      interval: '0 */2 * * 1-5'
+      selection_rule: '+orders'
+    raw_customers:
+      # Customers dbt source and all down stream models, every 2 hrs only on weekdays
+      generator: dbt
+      interval: '0 */2 * * 1-5'
+      selection_rule: 'source:tap_csv.customers+'

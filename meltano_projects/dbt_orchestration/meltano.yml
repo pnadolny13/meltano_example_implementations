@@ -1,0 +1,61 @@
+version: 1
+send_anonymous_usage_stats: false
+project_id: f5841cb5-2dc1-4e2b-99f8-d73147ed03dc
+plugins:
+  extractors:
+  - name: tap-csv
+    variant: meltanolabs
+    pip_url: git+https://github.com/MeltanoLabs/tap-csv.git
+    config:
+      files:
+        - entity: customers
+          path: data/customers.csv
+          keys: [id]
+        - entity: orders
+          path: data/orders.csv
+          keys: [id]
+        - entity: payments
+          path: data/payments.csv
+          keys: [id]
+  loaders:
+  - name: target-postgres
+    variant: transferwise
+    pip_url: pipelinewise-target-postgres
+  orchestrators:
+  - name: airflow
+    pip_url: apache-airflow==2.1.2 --constraint https://raw.githubusercontent.com/apache/airflow/constraints-2.1.2/constraints-${MELTANO__PYTHON_VERSION}.txt
+  files:
+  - name: airflow
+    pip_url: git+https://gitlab.com/meltano/files-airflow.git@dbt_dag_generator
+  - name: dbt
+    pip_url: git+https://gitlab.com/meltano/files-dbt.git@config-version-2
+  transformers:
+  - name: dbt
+    pip_url: 'dbt-core~=1.0.0 dbt-postgres~=1.0.0 dbt-redshift~=1.0.0 dbt-snowflake~=1.0.0
+      dbt-bigquery~=1.0.0
+
+      '
+environments:
+- name: dev
+  config:
+    plugins:
+      loaders:
+      - name: target-postgres
+        config:
+          user: meltano
+          dbname: warehouse
+          default_target_schema: public
+      transformers:
+      - name: dbt
+        config:
+          target: postgres
+          source_schema: public
+  env:
+    PG_ADDRESS: localhost
+    PG_PORT: '5432'
+    PG_USERNAME: meltano
+    PG_DATABASE: warehouse
+    AIRFLOW__SCHEDULER__MIN_FILE_PROCESS_INTERVAL: '5'
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+- name: staging
+- name: prod
