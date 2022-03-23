@@ -5,19 +5,75 @@ This project is based on the dbt's classic [Jaffle shop example project](https:/
 
 ### What is this repo?
 
-A self-contained Meltano project to share the benefits of running dbt core within a Meltano project.
+A Meltano project to share the benefits of running dbt core within a Meltano project.
 It can also serve as an example of how to configure your own Meltano project.
 
 The idea is to use dbt's Jaffle shop example project but instead of using dbt seed to load the data into your warehouse (aka local Postgres instance) you will use tap-csv and target-postgres to simulate how to use Singer as a EL tool.
 
+### What's contained in this project?
+
+The Meltano project has the following plugins installed and configured:
+
+- EL
+    - tap-csv (Singer)
+    - target-postgres (Singer)
+- Transformation
+    - dbt
+- Orchestration
+    - Airflow
+
+
+Features we'll specifically explore is the ability to schedule dbt models to run in Airflow at model level precision.
+We will set DAG definition, like the one below, using dbt selection syntax that automatically generate Airflow DAGs at the model level, including the Meltano EL sync that feeds the dbt source table.
+
+```yaml
+dags:
+  dag_definitions:
+    # Example DAGs to show how you might want to schedule different models in a more precise way
+    full_dag:
+      # Weekends - Full DAG once a day end to end
+      generator: dbt
+      interval: '0 0 * * 6,0'
+      selection_rule: '*'
+```
+
+It translates the dbt lineage graph from the Jaffle shop example that looks like this:
+
+![dbt_docs_lineage](./screenshots/dbt_docs_lineage.png)
+
+
+Into Airflow DAGs where each model is an Airflow task and dbt tests are run following the model.
+
+![airflow_full_dag](./screenshots/airflow_full_dag.png)
+
+
+Further we can configure dbt selection rules like `+orders` to define how the Airflow DAG should render:
+
+```yaml
+dags:
+  dag_definitions:
+    orders:
+      # Orders consumption model and all upstream, every 2 hrs only on weekdays
+      generator: dbt
+      interval: '0 */2 * * 1-5'
+      selection_rule: '+orders'
+```
+
+The dbt lineage graph that looks like this:
+
+![dbt_docs_lineage_orders](./screenshots/dbt_docs_lineage_orders.png)
+
+Becomes an Airflow DAG that looks like this:
+
+![airflow_orders](./screenshots/airflow_orders.png)
 
 ### How to run this project?
 
 1. Clone this repo:
 
     ```bash
-    git clone xyz
-    cd meltano_dbt_orchestrator/meltano_projects/dbt_orchestration
+    git clone https://github.com/pnadolny13/meltano_example_implementations.git
+    cd meltano_example_implementations/meltano_projects/dbt_orchestration/
     ```
 
 1. Install Meltano:
@@ -26,13 +82,14 @@ The idea is to use dbt's Jaffle shop example project but instead of using dbt se
     meltano install
     ```
 
-1. Start a local Postgres docker instance
+1. Start a local Postgres docker instance.
+It will contain a database called `warehouse` that we'll send our raw data to.
 
     ```bash
     docker run --rm --name postgres -e POSTGRES_PASSWORD=meltano -e POSTGRES_USER=meltano -e POSTGRES_DB=warehouse -d -p 5432:5432 postgres
     ```
 
-1. Create a .env and add database secrets. This is mostly to encourage best practices since were using a local Postgres instance we don't have any sensitive credentials.
+1. Create a `.env` file and add database secrets. This is mostly to encourage best practices since were using a local Postgres instance we don't have any sensitive credentials.
 
     ```bash
     touch .env
