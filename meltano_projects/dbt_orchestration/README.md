@@ -47,7 +47,7 @@ Into Airflow DAGs where each model is an Airflow task and dbt tests are run foll
 ![airflow_full_dag](./screenshots/airflow_full_dag.png)
 
 
-Further we can configure dbt selection rules like `+orders` to define how the Airflow DAG should render:
+Further we can configure [dbt graph operators](https://docs.getdbt.com/reference/node-selection/graph-operators) like `+orders` to define how the Airflow DAG should render, in this case all upstream of the `orders` model:
 
 ```yaml
 dags:
@@ -59,7 +59,7 @@ dags:
       selection_rule: '+orders'
 ```
 
-The dbt lineage graph that looks like this:
+The dbt lineage graph given the selection criteria looks like this:
 
 ![dbt_docs_lineage_orders](./screenshots/dbt_docs_lineage_orders.png)
 
