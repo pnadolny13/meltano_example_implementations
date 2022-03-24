@@ -141,12 +141,12 @@ Also this creates an Airflow users called `melty`.
     - Airflow - http://0.0.0.0:8080/home
     - dbt Docs - http://0.0.0.0:8081
 
-    Try updating [dag_definition.yml](orchestrate/dag_definition.yml) to add a DAG or update dbt select criteria.
-    Remember to delete the [generator_cache.yml](orchestrate/sample.generator_cache.yml) (links to the sample file) file when you make changes to the dbt project or schedules, it will get re-created automatically.
+    Try updating [dag_definition.yml](./orchestrate/dag_definition.yml) to add a DAG or update dbt select criteria.
+    Remember to delete the [generator_cache.yml](./orchestrate/sample.generator_cache.yml) (links to the sample file) file when you make changes to the dbt project or schedules, it will get re-created automatically.
 
 1. Explore the analysis utilities.
 This will analyze the selection criteria across all DAGs and let you know if any models are accidentally not selected.
-You can try commenting out `full_dag` and `orders` from [dag_definition.yml](orchestrate/dag_definition.yml) and re-running to see the output when models are not selected.
+You can try commenting out `full_dag` and `orders` from [dag_definition.yml](./orchestrate/dag_definition.yml) and re-running to see the output when models are not selected.
 
     ```bash
     python orchestrate/dags/dbt_analyze.py
