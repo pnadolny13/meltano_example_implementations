@@ -2,6 +2,8 @@
 
 This project is based on the dbt's classic [Jaffle shop example project](https://github.com/dbt-labs/jaffle_shop) but in a Meltano context.
 
+The Airflow DAG generator code that fuels this functionality is in review at https://gitlab.com/meltano/files-airflow/-/merge_requests/8.
+
 ### What is this repo?
 
 A Meltano project to share the benefits of running dbt core within a Meltano project.
@@ -23,7 +25,7 @@ The Meltano project has the following plugins installed and configured:
 
 
 Features we'll specifically explore is the ability to schedule dbt models to run in Airflow at model level precision.
-We will set DAG definition, like the one below, using dbt selection syntax that automatically generate Airflow DAGs at the model level, including the Meltano EL sync that feeds the dbt source table.
+We will set DAG definitions, like the one below, using dbt selection syntax that automatically generate Airflow DAGs at the model level, including the Meltano EL sync that feeds the dbt source table. The DAG definitions configuration file is a custom file thats not part of the Airflow, dbt, or Meltano spec. A version of the `dags` key will likely be added to `meltano.yml` in the near future, at that point this can be migrated there.
 
 ```yaml
 dags:
@@ -139,12 +141,12 @@ Also this creates an Airflow users called `melty`.
     - Airflow - http://0.0.0.0:8080/home
     - dbt Docs - http://0.0.0.0:8081
 
-    Try updating [dag_definition.yml](dbt_orchestration/orchestrate/dag_definition.yml) to add a DAG or update dbt select criteria.
-    Remember to delete the [generator_cache.yml](dbt_orchestration/orchestrate/generator_cache.yml) file when you make changes to the dbt project or schedules, it will get re-created automatically.
+    Try updating [dag_definition.yml](orchestrate/dag_definition.yml) to add a DAG or update dbt select criteria.
+    Remember to delete the [generator_cache.yml](orchestrate/sample.generator_cache.yml) (links to the sample file) file when you make changes to the dbt project or schedules, it will get re-created automatically.
 
 1. Explore the analysis utilities.
 This will analyze the selection criteria across all DAGs and let you know if any models are accidentally not selected.
-You can try commenting out `full_dag` and `orders` from [dag_definition.yml](dbt_orchestration/orchestrate/dag_definition.yml) and re-running to see the output when models are not selected.
+You can try commenting out `full_dag` and `orders` from [dag_definition.yml](orchestrate/dag_definition.yml) and re-running to see the output when models are not selected.
 
     ```bash
     python orchestrate/dags/dbt_analyze.py
