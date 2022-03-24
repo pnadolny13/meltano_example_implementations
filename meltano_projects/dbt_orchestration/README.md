@@ -120,7 +120,7 @@ Also this creates an Airflow users called `melty`.
     meltano --environment=dev invoke airflow scheduler -D
     ```
 
-    You'll notice that a [generator_cache.yml](dbt_orchestration/orchestrate/generator_cache.yml) file will get created which caches your selection criteria results, Meltano schedules, and dbt manifest.json content.
+    You'll notice that a [generator_cache.yml](./orchestrate/sample.generator_cache.yml) file will get created which caches your selection criteria results, Meltano schedules, and dbt manifest.json content.
 
     To kill the background Airflow processes run:
 
