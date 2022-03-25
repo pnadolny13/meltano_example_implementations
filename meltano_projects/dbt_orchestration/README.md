@@ -2,8 +2,9 @@
 
 This project is based on the dbt's classic [Jaffle shop example project](https://github.com/dbt-labs/jaffle_shop) but in a Meltano context.
 
-The Airflow DAG generator code [files-airflow-dbt](https://gitlab.com/pnadolny13/files-airflow-dbt) that fuels this functionality is :warning: **Experimental** :construction: and in review at https://gitlab.com/meltano/files-airflow/-/merge_requests/8 with more in depth discussion taking place in this issue https://gitlab.com/meltano/files-airflow/-/issues/7.
-Feel free to join the discussion and give feedback!
+The Airflow DAG generator code [files-airflow-dbt](https://gitlab.com/pnadolny13/files-airflow-dbt) that fuels this functionality is :warning: **Experimental** :construction: and being reviewed in the [Merge Request](https://gitlab.com/meltano/files-airflow/-/merge_requests/8) with more in depth discussion taking place in this [issue](https://gitlab.com/meltano/files-airflow/-/issues/7).
+
+We're looking for feedback so feel free to jump into the issue and leave comments!
 
 ### What is this repo?
 
