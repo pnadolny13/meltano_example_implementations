@@ -10,24 +10,31 @@ models:
         tests:
           - unique
           - not_null
+        data_type: INTEGER
 
       - name: first_name
         description: Customer's first name. PII.
+        data_type: VARCHAR
 
       - name: last_name
         description: Customer's last name. PII.
+        data_type: VARCHAR
 
       - name: first_order
         description: Date (UTC) of a customer's first order
+        data_type: DATE
 
       - name: most_recent_order
         description: Date (UTC) of a customer's most recent order
+        data_type: DATE
 
       - name: number_of_orders
         description: Count of the number of orders a customer has placed
+        data_type: BIGINT
 
       - name: number_of_orders
         description: Total value (AUD) of a customer's orders
+        data_type: BIGINT
 
   - name: orders
     description: This table has basic information about orders, as well as some derived facts based on payments
@@ -38,6 +45,7 @@ models:
           - unique
           - not_null
         description: This is a unique identifier for an order
+        data_type: INTEGER
 
       - name: customer_id
         description: Foreign key to the customers table
@@ -46,37 +54,45 @@ models:
           - relationships:
               to: ref('customers')
               field: customer_id
+        data_type: INTEGER
 
       - name: order_date
         description: Date (UTC) that the order was placed
+        data_type: DATE
 
       - name: status
         description: '{{ doc("orders_status") }}'
         tests:
           - accepted_values:
               values: ['placed', 'shipped', 'completed', 'return_pending', 'returned']
+        data_type: VARCHAR
 
       - name: amount
         description: Total amount (AUD) of the order
         tests:
           - not_null
+        data_type: BIGINT
 
       - name: credit_card_amount
         description: Amount of the order (AUD) paid for by credit card
         tests:
           - not_null
+        data_type: BIGINT
 
       - name: coupon_amount
         description: Amount of the order (AUD) paid for by coupon
         tests:
           - not_null
+        data_type: BIGINT
 
       - name: bank_transfer_amount
         description: Amount of the order (AUD) paid for by bank transfer
         tests:
           - not_null
+        data_type: BIGINT
 
       - name: gift_card_amount
         description: Amount of the order (AUD) paid for by gift card
         tests:
           - not_null
+        data_type: BIGINT

@@ -35,6 +35,43 @@ plugins:
       dbt-bigquery~=1.0.0
 
       '
+  utilities:
+  - name: superset
+    namespace: superset
+    commands:
+      up:
+        executable: /usr/local/bin/docker
+        args: compose -f analyze/superset/docker-compose.yml up -d
+      down:
+        executable: /usr/local/bin/docker
+        args: compose -f analyze/superset/docker-compose.yml down -v
+      ui:
+        executable: /bin/bash
+        args: analyze/superset/start_ui.sh
+      export_dashboards:
+        executable: /bin/bash
+        args: analyze/superset/export_dashboards.sh
+      import_dashboards:
+        executable: /bin/bash
+        args: analyze/superset/import_dashboards.sh
+      compile_datasources:
+        executable: python
+        args: analyze/superset/compile_datasources.py
+      load_datasources:
+        executable: /bin/bash
+        args: analyze/superset/load_datasources.sh
+    settings:
+      - name: tables
+        kind: array
+      - name: load_all_dbt_models
+        kind: boolean
+        value: false
+    config:
+      # load_all_dbt_models: true
+      tables:
+      - model.my_meltano_project.customers
+      - model.my_meltano_project.orders
+
 environments:
 - name: dev
   config:
