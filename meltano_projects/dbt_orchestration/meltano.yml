@@ -1,6 +1,4 @@
 version: 1
-send_anonymous_usage_stats: false
-project_id: f5841cb5-2dc1-4e2b-99f8-d73147ed03dc
 plugins:
   extractors:
   - name: tap-csv
