@@ -4,6 +4,20 @@ css: ''
 slug: null
 uuid: 8dcd9295-0a38-41a6-9698-1ee4e08b235b
 position:
+  CHART-3YY2Q19O:
+    children: []
+    id: CHART-3YY2Q19O
+    meta:
+      chartId: 2
+      height: 50
+      sliceName: Orders
+      uuid: 2491bab9-d21b-4530-a437-44e5b131b3be
+      width: 4
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-N-MM5TMDIK
+    type: CHART
   CHART-eOpOh1l08k:
     children: []
     id: CHART-eOpOh1l08k
@@ -54,32 +68,18 @@ position:
     meta:
       '0': ROOT_ID
       background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
     type: ROW
-    parents:
-    - ROOT_ID
-    - GRID_ID
-  CHART-3YY2Q19O:
-    children: []
-    id: CHART-3YY2Q19O
-    meta:
-      chartId: 2
-      height: 50
-      sliceName: Orders
-      uuid: 2491bab9-d21b-4530-a437-44e5b131b3be
-      width: 4
-    type: CHART
-    parents:
-    - ROOT_ID
-    - GRID_ID
-    - ROW-N-MM5TMDIK
 metadata:
-  show_native_filters: true
-  shared_label_colors: {}
+  chart_configuration: {}
   color_scheme: ''
-  refresh_frequency: 0
+  default_filters: '{}'
   expanded_slices: {}
   label_colors: {}
+  refresh_frequency: 0
+  shared_label_colors: {}
+  show_native_filters: true
   timed_refresh_immune_slices: []
-  default_filters: '{}'
-  chart_configuration: {}
 version: 1.0.0
