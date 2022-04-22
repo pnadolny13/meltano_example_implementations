@@ -1,0 +1,135 @@
+table_name: orders
+main_dttm_col: null
+description: null
+default_endpoint: null
+offset: 0
+cache_timeout: null
+schema: analytics
+sql: null
+params: null
+template_params: null
+filter_select_enabled: false
+fetch_values_predicate: null
+extra: null
+uuid: 2dc8068f-f5cd-4741-a161-51b0895e7463
+metrics: []
+columns:
+- column_name: status
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: VARCHAR
+  groupby: true
+  filterable: true
+  expression: null
+  description: 'Orders can be one of the following statuses:
+
+
+    | status         | description                                                                                                            |
+
+    |----------------|------------------------------------------------------------------------------------------------------------------------|
+
+    | placed         | The order has been placed but has not yet left the warehouse                                                           |
+
+    | shipped        | The order has ben shipped to the customer and is currently
+    in transit                                                  |
+
+    | completed      | The order has been received by the customer                                                                            |
+
+    | return_pending | The customer has indicated that they would like to return the
+    order, but it has not yet been received at the warehouse |
+
+    | returned       | The order has been returned by the customer and received at
+    the warehouse                                              |'
+  python_date_format: null
+  extra: null
+- column_name: bank_transfer_amount
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: VARCHAR
+  groupby: true
+  filterable: true
+  expression: null
+  description: Amount of the order (AUD) paid for by bank transfer
+  python_date_format: null
+  extra: null
+- column_name: credit_card_amount
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: VARCHAR
+  groupby: true
+  filterable: true
+  expression: null
+  description: Amount of the order (AUD) paid for by credit card
+  python_date_format: null
+  extra: null
+- column_name: gift_card_amount
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: VARCHAR
+  groupby: true
+  filterable: true
+  expression: null
+  description: Amount of the order (AUD) paid for by gift card
+  python_date_format: null
+  extra: null
+- column_name: coupon_amount
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: VARCHAR
+  groupby: true
+  filterable: true
+  expression: null
+  description: Amount of the order (AUD) paid for by coupon
+  python_date_format: null
+  extra: null
+- column_name: order_id
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: VARCHAR
+  groupby: true
+  filterable: true
+  expression: null
+  description: This is a unique identifier for an order
+  python_date_format: null
+  extra: null
+- column_name: order_date
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: VARCHAR
+  groupby: true
+  filterable: true
+  expression: null
+  description: Date (UTC) that the order was placed
+  python_date_format: null
+  extra: null
+- column_name: amount
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: VARCHAR
+  groupby: true
+  filterable: true
+  expression: null
+  description: Total amount (AUD) of the order
+  python_date_format: null
+  extra: null
+- column_name: customer_id
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: VARCHAR
+  groupby: true
+  filterable: true
+  expression: null
+  description: Foreign key to the customers table
+  python_date_format: null
+  extra: null
+version: 1.0.0
+database_uuid: 7517b725-3e72-4b5d-8fbf-d8f3ee617a00

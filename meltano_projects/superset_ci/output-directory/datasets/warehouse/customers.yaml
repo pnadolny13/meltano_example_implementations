@@ -1,0 +1,84 @@
+table_name: customers
+main_dttm_col: null
+description: null
+default_endpoint: null
+offset: 0
+cache_timeout: null
+schema: analytics
+sql: null
+params: null
+template_params: null
+filter_select_enabled: false
+fetch_values_predicate: null
+extra: null
+uuid: 205d9ead-7ff9-4d3f-99ea-fb5d42c0718c
+metrics: []
+columns:
+- column_name: most_recent_order
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: VARCHAR
+  groupby: true
+  filterable: true
+  expression: null
+  description: Date (UTC) of a customer's most recent order
+  python_date_format: null
+  extra: null
+- column_name: customer_id
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: VARCHAR
+  groupby: true
+  filterable: true
+  expression: null
+  description: This is a unique identifier for a customer
+  python_date_format: null
+  extra: null
+- column_name: number_of_orders
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: VARCHAR
+  groupby: true
+  filterable: true
+  expression: null
+  description: Total value (AUD) of a customer's orders
+  python_date_format: null
+  extra: null
+- column_name: first_order
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: VARCHAR
+  groupby: true
+  filterable: true
+  expression: null
+  description: Date (UTC) of a customer's first order
+  python_date_format: null
+  extra: null
+- column_name: last_name
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: VARCHAR
+  groupby: true
+  filterable: true
+  expression: null
+  description: Customer's last name. PII.
+  python_date_format: null
+  extra: null
+- column_name: first_name
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: VARCHAR
+  groupby: true
+  filterable: true
+  expression: null
+  description: Customer's first name. PII.
+  python_date_format: null
+  extra: null
+version: 1.0.0
+database_uuid: 7517b725-3e72-4b5d-8fbf-d8f3ee617a00
