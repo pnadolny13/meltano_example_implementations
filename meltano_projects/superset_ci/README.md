@@ -78,3 +78,11 @@ It will contain a database called `warehouse` that we'll send our raw data to.
 
     - dbt Docs - http://0.0.0.0:8080
 
+
+### Preset CLI Import/Export
+
+meltano invoke superset:ui
+
+pip install "git+https://github.com/preset-io/backend-sdk.git"
+
+superset-cli http://localhost:8088/ export output-directory/ --overwrite
