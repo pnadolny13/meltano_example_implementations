@@ -20,12 +20,7 @@ plugins:
   - name: target-postgres
     variant: transferwise
     pip_url: pipelinewise-target-postgres
-  orchestrators:
-  - name: airflow
-    pip_url: apache-airflow==2.1.2 --constraint https://raw.githubusercontent.com/apache/airflow/constraints-2.1.2/constraints-${MELTANO__PYTHON_VERSION}.txt
   files:
-  - name: airflow
-    pip_url: git+https://gitlab.com/pnadolny13/files-airflow-dbt.git
   - name: dbt
     pip_url: git+https://gitlab.com/meltano/files-dbt.git@config-version-2
   transformers:
@@ -54,7 +49,5 @@ environments:
     PG_PORT: '5432'
     PG_USERNAME: meltano
     PG_DATABASE: warehouse
-    AIRFLOW__SCHEDULER__MIN_FILE_PROCESS_INTERVAL: '5'
-    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
 - name: staging
 - name: prod

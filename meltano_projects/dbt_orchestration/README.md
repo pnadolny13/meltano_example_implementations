@@ -1,6 +1,6 @@
-# Meltano x dbt Jaffle Shop
+# Meltano Orchestrating dbt using Airflow
 
-This project is based on the dbt's classic [Jaffle shop example project](https://github.com/dbt-labs/jaffle_shop) but in a Meltano context.
+This project is based on the dbt's classic [Jaffle shop example project](https://github.com/dbt-labs/jaffle_shop) but in a Meltano context and builds off the [singer_dbt_jaffle](../singer_dbt_jaffle/) sample project in this repo.
 
 The Airflow DAG generator code [files-airflow-dbt](https://gitlab.com/pnadolny13/files-airflow-dbt) that fuels this functionality is :warning: **Experimental** :construction: and being reviewed in the [Merge Request](https://gitlab.com/meltano/files-airflow/-/merge_requests/8) with more in depth discussion taking place in this [issue](https://gitlab.com/meltano/files-airflow/-/issues/7).
 
@@ -27,7 +27,9 @@ The Meltano project has the following plugins installed and configured:
 
 
 Features we'll specifically explore is the ability to schedule dbt models to run in Airflow at model level precision.
-We will set DAG definitions, like the one below, using dbt selection syntax that automatically generate Airflow DAGs at the model level, including the Meltano EL sync that feeds the dbt source table. The DAG definitions configuration file is a custom file thats not part of the Airflow, dbt, or Meltano spec. A version of the `dags` key will likely be added to `meltano.yml` in the near future, at that point this can be migrated there.
+We will set DAG definitions, like the one below, using dbt selection syntax that automatically generate Airflow DAGs at the model level, including the Meltano EL sync that feeds the dbt source table.
+
+The DAG definitions configuration file is a custom file thats not part of the Airflow, dbt, or Meltano. A version of the `dags` key will likely be added to `meltano.yml` in the near future, at that point this can be migrated there.
 
 ```yaml
 dags:
@@ -70,6 +72,10 @@ Becomes an Airflow DAG that looks like this:
 
 ![airflow_orders](./screenshots/airflow_orders.png)
 
+### Prerequisites
+
+Having Meltano installed! See https://docs.meltano.com/guide/installation for more details.
+
 ### How to run this project?
 
 1. Clone this repo:
@@ -102,7 +108,7 @@ It will contain a database called `warehouse` that we'll send our raw data to.
 1. Run the EL pipeline using Meltano
 
     ```bash
-    meltano --environment=dev run tap-csv target-postgres
+    meltano run tap-csv target-postgres
     ```
 
     You should now see data in your Postgres database.
@@ -110,16 +116,16 @@ It will contain a database called `warehouse` that we'll send our raw data to.
 1. Compile your dbt project so your manifest.json is available for informing how to generate Airflow DAGs.
 
     ```bash
-    meltano --environment=dev run dbt:compile
+    meltano run dbt:compile
     ```
 
 1. Start Airflow as a background process.
 Also this creates an Airflow users called `melty`.
 
     ```bash
-    meltano --environment=dev invoke airflow webserver -D
-    meltano --environment=dev invoke airflow users create --username melty --firstname melty --lastname meltano --role Admin --password melty --email melty@meltano.com
-    meltano --environment=dev invoke airflow scheduler -D
+    meltano invoke airflow webserver -D
+    meltano invoke airflow users create --username melty --firstname melty --lastname meltano --role Admin --password melty --email melty@meltano.com
+    meltano invoke airflow scheduler -D
     ```
 
     You'll notice that a [generator_cache.yml](./orchestrate/sample.generator_cache.yml) file will get created which caches your selection criteria results, Meltano schedules, and dbt manifest.json content.
@@ -133,9 +139,9 @@ Also this creates an Airflow users called `melty`.
 1. Generate and serve your the dbt docs.
 
     ```bash
-    meltano --environment=dev invoke dbt docs generate
+    meltano invoke dbt docs generate
     # Uses a custom port so it doesnt collide with the Airflow webserver
-    meltano --environment=dev invoke dbt docs serve --port 8081
+    meltano invoke dbt docs serve --port 8081
     ```
 
 1. Explore the UIs! Turn on the DAGs that your want to run and watch them create Postgres views.
