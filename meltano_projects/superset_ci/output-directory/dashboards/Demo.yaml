@@ -22,6 +22,7 @@ position:
   GRID_ID:
     children:
     - ROW-2FeKufmmZ-
+    - ROW-N-CTPWRFLZ
     id: GRID_ID
     parents:
     - ROOT_ID
@@ -46,6 +47,31 @@ position:
     - ROOT_ID
     - GRID_ID
     type: ROW
+  ROW-N-CTPWRFLZ:
+    children:
+    - CHART-S8S31949
+    id: ROW-N-CTPWRFLZ
+    meta:
+      '0': ROOT_ID
+      background: BACKGROUND_TRANSPARENT
+    type: ROW
+    parents:
+    - ROOT_ID
+    - GRID_ID
+  CHART-S8S31949:
+    children: []
+    id: CHART-S8S31949
+    meta:
+      chartId: 2
+      height: 50
+      sliceName: Orders
+      uuid: 2491bab9-d21b-4530-a437-44e5b131b3be
+      width: 4
+    type: CHART
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-N-CTPWRFLZ
 metadata:
   show_native_filters: true
   shared_label_colors: {}

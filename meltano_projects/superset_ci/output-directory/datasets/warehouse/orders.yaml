@@ -5,7 +5,7 @@ default_endpoint: null
 offset: 0
 cache_timeout: null
 schema: analytics
-sql: null
+sql: ''
 params: null
 template_params: null
 filter_select_enabled: false
@@ -17,7 +17,7 @@ columns:
 - column_name: status
   verbose_name: null
   is_dttm: false
-  is_active: true
+  is_active: null
   type: VARCHAR
   groupby: true
   filterable: true
@@ -42,94 +42,103 @@ columns:
     | returned       | The order has been returned by the customer and received at
     the warehouse                                              |'
   python_date_format: null
-  extra: null
+  extra:
+    warning_markdown: null
 - column_name: bank_transfer_amount
   verbose_name: null
   is_dttm: false
-  is_active: true
-  type: VARCHAR
+  is_active: null
+  type: BIGINT
   groupby: true
   filterable: true
   expression: null
   description: Amount of the order (AUD) paid for by bank transfer
   python_date_format: null
-  extra: null
+  extra:
+    warning_markdown: null
 - column_name: credit_card_amount
   verbose_name: null
   is_dttm: false
-  is_active: true
-  type: VARCHAR
+  is_active: null
+  type: BIGINT
   groupby: true
   filterable: true
   expression: null
   description: Amount of the order (AUD) paid for by credit card
   python_date_format: null
-  extra: null
+  extra:
+    warning_markdown: null
 - column_name: gift_card_amount
   verbose_name: null
   is_dttm: false
-  is_active: true
-  type: VARCHAR
+  is_active: null
+  type: BIGINT
   groupby: true
   filterable: true
   expression: null
   description: Amount of the order (AUD) paid for by gift card
   python_date_format: null
-  extra: null
+  extra:
+    warning_markdown: null
 - column_name: coupon_amount
   verbose_name: null
   is_dttm: false
-  is_active: true
-  type: VARCHAR
+  is_active: null
+  type: BIGINT
   groupby: true
   filterable: true
   expression: null
   description: Amount of the order (AUD) paid for by coupon
   python_date_format: null
-  extra: null
+  extra:
+    warning_markdown: null
 - column_name: order_id
   verbose_name: null
   is_dttm: false
-  is_active: true
-  type: VARCHAR
+  is_active: null
+  type: INTEGER
   groupby: true
   filterable: true
   expression: null
   description: This is a unique identifier for an order
   python_date_format: null
-  extra: null
+  extra:
+    warning_markdown: null
 - column_name: order_date
   verbose_name: null
-  is_dttm: false
-  is_active: true
-  type: VARCHAR
+  is_dttm: true
+  is_active: null
+  type: DATE
   groupby: true
   filterable: true
   expression: null
   description: Date (UTC) that the order was placed
   python_date_format: null
-  extra: null
+  extra:
+    warning_markdown: null
 - column_name: amount
   verbose_name: null
   is_dttm: false
-  is_active: true
-  type: VARCHAR
+  is_active: null
+  type: BIGINT
   groupby: true
   filterable: true
   expression: null
   description: Total amount (AUD) of the order
   python_date_format: null
-  extra: null
+  extra:
+    warning_markdown: null
 - column_name: customer_id
   verbose_name: null
   is_dttm: false
-  is_active: true
-  type: VARCHAR
+  is_active: null
+  type: INTEGER
   groupby: true
   filterable: true
   expression: null
   description: Foreign key to the customers table
   python_date_format: null
-  extra: null
+  extra:
+    warning_markdown: null
 version: 1.0.0
 database_uuid: 7517b725-3e72-4b5d-8fbf-d8f3ee617a00
