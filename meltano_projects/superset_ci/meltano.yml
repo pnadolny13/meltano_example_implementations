@@ -1,0 +1,101 @@
+version: 1
+default_environment: dev
+plugins:
+  extractors:
+  - name: tap-csv
+    variant: meltanolabs
+    pip_url: git+https://github.com/MeltanoLabs/tap-csv.git
+    config:
+      files:
+        - entity: customers
+          path: data/customers.csv
+          keys: [id]
+        - entity: orders
+          path: data/orders.csv
+          keys: [id]
+        - entity: payments
+          path: data/payments.csv
+          keys: [id]
+  loaders:
+  - name: target-postgres
+    variant: transferwise
+    pip_url: pipelinewise-target-postgres
+  files:
+  - name: dbt
+    pip_url: git+https://gitlab.com/meltano/files-dbt.git@config-version-2
+  transformers:
+  - name: dbt
+    pip_url: 'dbt-core~=1.0.0 dbt-postgres~=1.0.0 dbt-redshift~=1.0.0 dbt-snowflake~=1.0.0
+      dbt-bigquery~=1.0.0
+
+      '
+  utilities:
+  - name: superset
+    namespace: superset
+    commands:
+      up:
+        executable: /usr/local/bin/docker
+        args: compose -f analyze/superset/docker-compose.yml up -d
+      down:
+        executable: /usr/local/bin/docker
+        args: compose -f analyze/superset/docker-compose.yml down -v
+      ui:
+        executable: /bin/bash
+        args: analyze/superset/start_ui.sh
+      export_dashboards:
+        executable: /bin/bash
+        args: analyze/superset/export_dashboards.sh
+      import_dashboards:
+        executable: /bin/bash
+        args: analyze/superset/import_dashboards.sh
+      load_datasources:
+        executable: /bin/bash
+        args: analyze/superset/load_datasources.sh
+    settings:
+          - name: tables
+            description: An array of table names to import into Supserset. They must be in dbt format e.g. `model.my_meltano_project.customers`.
+            kind: array
+          - name: load_all_dbt_models
+            description: A boolean whether to import all known models from dbt or not. If not, use the `tables` array to select by name.
+            kind: boolean
+            value: false
+          - name: sqlalchemy_uri
+            description: The full SQLAlchemy uri for your database engine.
+              Make sure additional dependencies are installed to use the particular engine.
+          - name: database_name
+            description: The alias for your database once imported into Superset.
+          - name: additional_dependencies
+            kind: array
+            description: An array of python dependencies to include as part of startup.
+              A list of database driver dependencies can be found here https://superset.apache.org/docs/databases/installing-database-drivers
+    config:
+      database_name: warehouse
+      sqlalchemy_uri: postgresql+psycopg2://${PG_USERNAME}:${PG_PASSWORD}@host.docker.internal:${PG_PORT}/${PG_DATABASE}
+      tables:
+      - model.my_meltano_project.orders
+      - model.my_meltano_project.customers
+environments:
+- name: dev
+  config:
+    plugins:
+      loaders:
+      - name: target-postgres
+        config:
+          user: meltano
+          dbname: warehouse
+          default_target_schema: public
+      transformers:
+      - name: dbt
+        config:
+          target: postgres
+          source_schema: public
+  env:
+    PG_ADDRESS: localhost
+    PG_PORT: '5432'
+    PG_USERNAME: meltano
+    PG_DATABASE: warehouse
+    SUPERSET_API_URL: http://localhost:8088
+    SUPERSET_USER: admin
+    SUPERSET_PASS: admin
+- name: staging
+- name: prod
