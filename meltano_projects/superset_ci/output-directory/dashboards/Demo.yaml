@@ -22,7 +22,7 @@ position:
   GRID_ID:
     children:
     - ROW-2FeKufmmZ-
-    - ROW-N-AM6HSDSF
+    - ROW-N-MM5TMDIK
     id: GRID_ID
     parents:
     - ROOT_ID
@@ -47,10 +47,10 @@ position:
     - ROOT_ID
     - GRID_ID
     type: ROW
-  ROW-N-AM6HSDSF:
+  ROW-N-MM5TMDIK:
     children:
-    - CHART-XGSUYKGV
-    id: ROW-N-AM6HSDSF
+    - CHART-3YY2Q19O
+    id: ROW-N-MM5TMDIK
     meta:
       '0': ROOT_ID
       background: BACKGROUND_TRANSPARENT
@@ -58,9 +58,9 @@ position:
     parents:
     - ROOT_ID
     - GRID_ID
-  CHART-XGSUYKGV:
+  CHART-3YY2Q19O:
     children: []
-    id: CHART-XGSUYKGV
+    id: CHART-3YY2Q19O
     meta:
       chartId: 2
       height: 50
@@ -71,7 +71,7 @@ position:
     parents:
     - ROOT_ID
     - GRID_ID
-    - ROW-N-AM6HSDSF
+    - ROW-N-MM5TMDIK
 metadata:
   show_native_filters: true
   shared_label_colors: {}
