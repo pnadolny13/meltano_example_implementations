@@ -63,6 +63,7 @@ It will contain a database called `warehouse` that we'll send our raw data to.
 1. Start Superset
 
     ```bash
+    touch analyze/superset/docker/.env
     meltano invoke superset:ui
     ```
 
