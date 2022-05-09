@@ -20,7 +20,19 @@ set -e
 #
 # Always install local overrides first
 #
-/app/docker/docker-bootstrap.sh
+
+REQUIREMENTS_LOCAL="/app/docker/requirements-local.txt"
+#
+# Make sure we have dev requirements installed
+#
+if [ -f "${REQUIREMENTS_LOCAL}" ]; then
+  echo "Installing local overrides at ${REQUIREMENTS_LOCAL}"
+  pip install -r "${REQUIREMENTS_LOCAL}"
+else
+  echo "Skipping local overrides"
+fi
+
+python /app/docker/compile_datasources.py
 
 STEP_CNT=5
 
@@ -38,14 +50,6 @@ Init Step ${1}/${STEP_CNT} [${2}] -- ${3}
 EOF
 }
 ADMIN_PASSWORD="admin"
-# If Cypress run – overwrite the password for admin and export env variables
-if [ "$CYPRESS_CONFIG" == "true" ]; then
-    ADMIN_PASSWORD="general"
-    export SUPERSET_CONFIG=tests.superset_test_config
-    export SUPERSET_TESTENV=true
-    export ENABLE_REACT_CRUD_VIEWS=true
-    export SUPERSET__SQLALCHEMY_DATABASE_URI=postgresql+psycopg2://superset:superset@db:5432/superset
-fi
 # Initialize the database
 echo_step "1" "Starting" "Applying DB migrations"
 superset db upgrade
@@ -68,13 +72,7 @@ echo_step "3" "Complete" "Setting up roles and perms"
 if [ "$SUPERSET_LOAD_EXAMPLES" = "yes" ]; then
     # Load some data to play with
     echo_step "4" "Starting" "Loading examples"
-    # If Cypress run which consumes superset_test_config – load required data for tests
-    if [ "$CYPRESS_CONFIG" == "true" ]; then
-        superset load_test_users
-        superset load_examples --load-test-data
-    else
-        superset load_examples
-    fi
+    superset load_examples
     echo_step "4" "Complete" "Loading examples"
 else
     echo_step "4" "Skipping" "Loading examples"
@@ -86,3 +84,15 @@ if [ "$MELTANO_SYNC_TABLES" = "true" ]; then
     superset import_datasources -p /app/assets/database/datasources.yml
     superset import-dashboards -p /app/assets/dashboard/dashboards.json
 fi
+
+gunicorn \
+    --bind  "0.0.0.0:${SUPERSET_PORT}" \
+    --access-logfile '-' \
+    --error-logfile '-' \
+    --workers 1 \
+    --worker-class gthread \
+    --threads 20 \
+    --timeout ${GUNICORN_TIMEOUT:-60} \
+    --limit-request-line 0 \
+    --limit-request-field_size 0 \
+    "${FLASK_APP}"

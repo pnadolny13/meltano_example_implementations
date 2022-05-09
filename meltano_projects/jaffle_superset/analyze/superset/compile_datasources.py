@@ -13,8 +13,8 @@ project_root = os.getenv("MELTANO_PROJECT_ROOT", os.getcwd())
 
 dbt_nodes = read_dbt_manifest(project_root)
 
-selected_tables = json.loads(os.getenv("SUPERSET_TABLES", "[]"))
-load_all = os.getenv("SUPERSET_LOAD_ALL_DBT_MODELS")
+selected_tables = json.loads(os.getenv("SUPERSET_TABLES", os.getenv("SUPERSET_DOCKER_TABLES", "[]")))
+load_all = os.getenv("SUPERSET_LOAD_ALL_DBT_MODELS", os.getenv("SUPERSET_DOCKER_LOAD_ALL_DBT_MODELS"))
 
 tables = []
 for table_name, table_def in dbt_nodes.get("nodes").items():
@@ -43,9 +43,9 @@ for table_name, table_def in dbt_nodes.get("nodes").items():
 
 
 database_def = {
-    "database_name": os.getenv("SUPERSET_DATABASE_NAME", "db_name"),
+    "database_name": os.getenv("SUPERSET_DATABASE_NAME", os.getenv("SUPERSET_DOCKER_DATABASE_NAME", "db_name")),
     "extra": '{"allows_virtual_table_explore":true,"metadata_params":{},"engine_params":{},"schemas_allowed_for_csv_upload":[]}',
-    "sqlalchemy_uri": os.environ["SUPERSET_SQLALCHEMY_URI"],
+    "sqlalchemy_uri": os.getenv("SUPERSET_SQLALCHEMY_URI", os.environ["SUPERSET_DOCKER_SQLALCHEMY_URI"]),
     "tables": tables
 }
 superset_data = {
@@ -58,6 +58,6 @@ with open(os.path.join(project_root, "analyze", "superset", "assets", "database"
     yaml.dump(superset_data, yaml_file, default_flow_style=False)
 
 with open(os.path.join(project_root, "analyze", "superset", "docker", "requirements-local.txt"), "w") as req_file:
-    deps = "\n".join(json.loads(os.getenv("SUPERSET_ADDITIONAL_DEPENDENCIES", "[]")))
+    deps = "\n".join(json.loads(os.getenv("SUPERSET_ADDITIONAL_DEPENDENCIES", os.getenv("SUPERSET_DOCKER_ADDITIONAL_DEPENDENCIES", "[]"))))
     content = f"# Add database driver dependencies here https://superset.apache.org/docs/databases/installing-database-drivers\n{deps}"
     req_file.write(content)
