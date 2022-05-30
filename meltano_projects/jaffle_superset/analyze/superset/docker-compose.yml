@@ -54,6 +54,8 @@ services:
       - 8088:8088
     depends_on: *superset-depends-on
     volumes: *superset-volumes
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   superset-init:
     image: *superset-image
@@ -63,6 +65,8 @@ services:
     depends_on: *superset-depends-on
     user: "root"
     volumes: *superset-volumes
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   superset-worker:
     image: *superset-image
@@ -73,6 +77,8 @@ services:
     depends_on: *superset-depends-on
     user: "root"
     volumes: *superset-volumes
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   superset-worker-beat:
     image: *superset-image
@@ -83,6 +89,8 @@ services:
     depends_on: *superset-depends-on
     user: "root"
     volumes: *superset-volumes
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 volumes:
   superset_home:
