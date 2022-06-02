@@ -1,0 +1,109 @@
+version: 1
+default_environment: dev
+send_anonymous_usage_stats: false
+plugins:
+  extractors:
+  - name: tap-csv
+    variant: meltanolabs
+    pip_url: git+https://github.com/MeltanoLabs/tap-csv.git
+  loaders:
+  - name: target-postgres
+    variant: transferwise
+    pip_url: pipelinewise-target-postgres
+  orchestrators:
+  - name: airflow
+    pip_url: apache-airflow==2.1.2 --constraint https://raw.githubusercontent.com/apache/airflow/constraints-2.1.2/constraints-${MELTANO__PYTHON_VERSION}.txt
+  transformers:
+  - name: dbt-postgres
+    pip_url: dbt-core~=1.0.0 dbt-postgres~=1.0.0
+  files:
+  - name: airflow
+    pip_url: git+https://gitlab.com/meltano/files-airflow.git
+  utilities:
+  - name: superset
+    namespace: superset
+    commands:
+      ui:
+        args: superset
+        container_spec:
+          image: apache/superset:latest
+          entrypoint: /app/meltano/docker/docker-init-full.sh
+          env:
+            PATH: /usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+            HOME: /app/superset_home
+            PWD: /app
+            PYTHONPATH: /app/pythonpath
+          volumes:
+            - "$MELTANO_PROJECT_ROOT/analyze/superset/docker:/app/meltano/docker"
+            - "$MELTANO_PROJECT_ROOT/analyze/superset/assets:/app/meltano/assets"
+            - "$MELTANO_PROJECT_ROOT/.meltano/run/superset/:/app/superset_home"
+            - "$MELTANO_PROJECT_ROOT/.meltano/transformers/dbt/target:/app/meltano/dbt/"
+          ports:
+            "8088": "8088/tcp"
+      refresh_datasources:
+        executable: /bin/bash
+        args: analyze/superset/refresh_datasources.sh
+    settings:
+    - name: tables
+      description: An array of table names to import into Supserset. They must be in dbt format e.g. `model.my_meltano_project.customers`.
+      kind: array
+    - name: sync_assets
+      description: A boolean whether sync local assets to Superset or not.
+      kind: boolean
+      value: false
+    - name: sqlalchemy_uri
+      kind: password
+      description: The full SQLAlchemy uri for your database engine.
+        Make sure additional dependencies are installed to use the particular engine.
+    - name: database_name
+      description: The alias for your database once imported into Superset.
+    - name: additional_dependencies
+      kind: array
+      description: An array of python dependencies to include as part of startup.
+        A list of database driver dependencies can be found here https://superset.apache.org/docs/databases/installing-database-drivers
+    - name: load_examples
+      description: A boolean whether to load Superset's example datasets and dashboards.
+      kind: boolean
+      value: false
+    config:
+      database_name: my_postgres
+      tables:
+      - model.my_meltano_project.customers
+      - model.my_meltano_project.orders
+      sync_assets: true
+environments:
+- name: dev
+  config:
+    plugins:
+      extractors:
+      - name: tap-csv
+        config:
+          files:
+          - entity: customers
+            path: /Users/pnadolny/Documents/Git/GitHub/pnadolny/meltano_example_implementations/meltano_projects/dbt_orchestration/data/customers.csv
+            keys:
+            - id
+          - entity: orders
+            path: /Users/pnadolny/Documents/Git/GitHub/pnadolny/meltano_example_implementations/meltano_projects/dbt_orchestration/data/orders.csv
+            keys:
+            - id
+          - entity: payments
+            path: /Users/pnadolny/Documents/Git/GitHub/pnadolny/meltano_example_implementations/meltano_projects/dbt_orchestration/data/payments.csv
+            keys:
+            - id
+      loaders:
+      - name: target-postgres
+        config:
+          user: meltano
+          dbname: warehouse
+          default_target_schema: public
+      transformers:
+      - name: dbt-postgres
+        config:
+          host: localhost
+          user: meltano
+          port: 5432
+          dbname: warehouse
+          schema: analytics
+- name: staging
+- name: prod

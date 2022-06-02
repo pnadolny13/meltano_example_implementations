@@ -1,0 +1,35 @@
+{
+  "plugin_type": "orchestrators",
+  "name": "airflow",
+  "namespace": "airflow",
+  "docs": "https://docs.meltano.com/guide/orchestration",
+  "repo": "https://github.com/apache/airflow",
+  "pip_url": "apache-airflow==2.1.2 --constraint https://raw.githubusercontent.com/apache/airflow/constraints-2.1.2/constraints-${MELTANO__PYTHON_VERSION}.txt",
+  "settings": [
+    {
+      "name": "core.dags_folder",
+      "env": "AIRFLOW__CORE__DAGS_FOLDER",
+      "value": "$MELTANO_PROJECT_ROOT/orchestrate/dags"
+    },
+    {
+      "name": "core.plugins_folder",
+      "env": "AIRFLOW__CORE__PLUGINS_FOLDER",
+      "value": "$MELTANO_PROJECT_ROOT/orchestrate/plugins"
+    },
+    {
+      "name": "core.sql_alchemy_conn",
+      "env": "AIRFLOW__CORE__SQL_ALCHEMY_CONN",
+      "value": "sqlite:///$MELTANO_PROJECT_ROOT/.meltano/orchestrators/airflow/airflow.db"
+    },
+    {
+      "name": "core.load_examples",
+      "env": "AIRFLOW__CORE__LOAD_EXAMPLES",
+      "value": false
+    },
+    {
+      "name": "core.dags_are_paused_at_creation",
+      "env": "AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION",
+      "value": false
+    }
+  ]
+}

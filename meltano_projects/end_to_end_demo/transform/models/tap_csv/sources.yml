@@ -1,0 +1,9 @@
+config-version: 2
+version: 2
+sources:
+  - name: tap_csv
+    schema: public
+    tables:
+      - name: customers
+      - name: orders
+      - name: payments
