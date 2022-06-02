@@ -21,56 +21,6 @@ plugins:
     pip_url: git+https://gitlab.com/meltano/files-airflow.git
   utilities:
   - name: superset
-    namespace: superset
-    commands:
-      ui:
-        args: superset
-        container_spec:
-          image: apache/superset:latest
-          entrypoint: /app/meltano/docker/docker-init-full.sh
-          env:
-            PATH: /usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-            HOME: /app/superset_home
-            PWD: /app
-            PYTHONPATH: /app/pythonpath
-          volumes:
-            - "$MELTANO_PROJECT_ROOT/analyze/superset/docker:/app/meltano/docker"
-            - "$MELTANO_PROJECT_ROOT/analyze/superset/assets:/app/meltano/assets"
-            - "$MELTANO_PROJECT_ROOT/.meltano/run/superset/:/app/superset_home"
-            - "$MELTANO_PROJECT_ROOT/.meltano/transformers/dbt/target:/app/meltano/dbt/"
-          ports:
-            "8088": "8088/tcp"
-      refresh_datasources:
-        executable: /bin/bash
-        args: analyze/superset/refresh_datasources.sh
-    settings:
-    - name: tables
-      description: An array of table names to import into Supserset. They must be in dbt format e.g. `model.my_meltano_project.customers`.
-      kind: array
-    - name: sync_assets
-      description: A boolean whether sync local assets to Superset or not.
-      kind: boolean
-      value: false
-    - name: sqlalchemy_uri
-      kind: password
-      description: The full SQLAlchemy uri for your database engine.
-        Make sure additional dependencies are installed to use the particular engine.
-    - name: database_name
-      description: The alias for your database once imported into Superset.
-    - name: additional_dependencies
-      kind: array
-      description: An array of python dependencies to include as part of startup.
-        A list of database driver dependencies can be found here https://superset.apache.org/docs/databases/installing-database-drivers
-    - name: load_examples
-      description: A boolean whether to load Superset's example datasets and dashboards.
-      kind: boolean
-      value: false
-    config:
-      database_name: my_postgres
-      tables:
-      - model.my_meltano_project.customers
-      - model.my_meltano_project.orders
-      sync_assets: true
 environments:
 - name: dev
   config:
@@ -105,5 +55,13 @@ environments:
           port: 5432
           dbname: warehouse
           schema: analytics
+      utilities:
+      - name: superset
+        config:
+          database_name: my_postgres
+          tables:
+          - model.my_meltano_project.customers
+          - model.my_meltano_project.orders
+          sync_assets: true
 - name: staging
 - name: prod
