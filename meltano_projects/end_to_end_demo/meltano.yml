@@ -10,18 +10,59 @@ plugins:
   - name: target-postgres
     variant: transferwise
     pip_url: pipelinewise-target-postgres
-  orchestrators:
-  - name: airflow
-    pip_url: apache-airflow==2.1.2 --constraint https://raw.githubusercontent.com/apache/airflow/constraints-2.1.2/constraints-${MELTANO__PYTHON_VERSION}.txt
   transformers:
   - name: dbt-postgres
     pip_url: dbt-core~=1.0.0 dbt-postgres~=1.0.0
-  files:
-  - name: airflow
-    pip_url: git+https://gitlab.com/meltano/files-airflow.git
   utilities:
   - name: superset
+    namespace: superset
     pip_url: apache-superset==1.5.0 markupsafe==2.0.1
+    executable: superset
+    settings:
+    - name: tables
+      kind: array
+      description: An array of table names to import into Supserset. They must be in dbt
+        format e.g. `model.my_meltano_project.customers`.
+    - name: sync_assets
+      kind: boolean
+      value: false
+      description: A boolean whether sync local assets to Superset or not.
+    - name: sqlalchemy_uri
+      kind: password
+      description: The full SQLAlchemy uri for your database engine. Make sure additional
+        dependencies are installed to use the particular engine.
+    - name: database_name
+      description: The alias for your database once imported into Superset.
+    - name: additional_dependencies
+      kind: array
+      description: An array of python dependencies to include as part of startup. A list
+        of database driver dependencies can be found here https://superset.apache.org/docs/databases/installing-database-drivers
+    - name: load_examples
+      kind: boolean
+      value: false
+      description: A boolean whether to load Superset's example datasets and dashboards.
+    commands:
+      ui:
+        args: analyze/superset/scratch/superset-init.sh
+        executable: "/bin/bash"
+        container_spec:
+          image: apache/superset:1.5.0
+          entrypoint: "/app/meltano/docker/superset-init.sh"
+          ports:
+            '8088': 8088/tcp
+          volumes:
+          - "$MELTANO_PROJECT_ROOT/analyze/superset/docker:/app/meltano/docker"
+          - "$MELTANO_PROJECT_ROOT/analyze/superset/assets:/app/meltano/assets"
+          - "$MELTANO_PROJECT_ROOT/.meltano/run/superset/:/app/superset_home"
+          - "$MELTANO_PROJECT_ROOT/.meltano/transformers/dbt/target:/app/meltano/dbt/"
+          env:
+            PATH: "/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+            HOME: "/app/superset_home"
+            PWD: "/app"
+            PYTHONPATH: "/app/pythonpath"
+      refresh_datasources:
+        args: analyze/superset/refresh_datasources.sh
+        executable: "/bin/bash"
 environments:
 - name: dev
   config:
