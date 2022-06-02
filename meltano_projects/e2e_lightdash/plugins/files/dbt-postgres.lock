@@ -1,0 +1,7 @@
+{
+  "plugin_type": "files",
+  "name": "dbt-postgres",
+  "namespace": "dbt_postgres",
+  "repo": "https://gitlab.com/meltano/files-dbt-postgres",
+  "pip_url": "git+https://gitlab.com/meltano/files-dbt-postgres"
+}

@@ -1,0 +1,50 @@
+version: "3.9"
+services:
+  lightdash:
+    image: lightdash/lightdash:latest
+    depends_on:
+      - db
+    environment:
+      - PGHOST=${LIGHTDASH_PGHOST:-db}
+      - PGPORT=${LIGHTDASH_PGPORT:-5432}
+      - PGUSER=${LIGHTDASH_PGUSER:-postgres}
+      - PGPASSWORD=${LIGHTDASH_PGPASSWORD}
+      - PGDATABASE=${LIGHTDASH_PGDATABASE:-postgres}
+      - SECURE_COOKIES=${SECURE_COOKIES:-false}
+      - TRUST_PROXY=${TRUST_PROXY:-false}
+      - LIGHTDASH_SECRET=${LIGHTDASH_SECRET}
+      - PORT=${PORT:-8080}
+      - LIGHTDASH_LOG_LEVEL=${LIGHTDASH_LOG_LEVEL}
+      - LIGHTDASH_INSTALL_ID=${LIGHTDASH_INSTALL_ID}
+      - LIGHTDASH_INSTALL_TYPE=${LIGHTDASH_INSTALL_TYPE:-docker_image}
+      - AUTH_DISABLE_PASSWORD_AUTHENTICATION=${AUTH_DISABLE_PASSWORD_AUTHENTICATION}
+      - AUTH_GOOGLE_OAUTH2_CLIENT_ID=${AUTH_GOOGLE_OAUTH2_CLIENT_ID}
+      - AUTH_GOOGLE_OAUTH2_CLIENT_SECRET=${AUTH_GOOGLE_OAUTH2_CLIENT_SECRET}
+      - SITE_URL:${SITE_URL}
+      - EMAIL_SMTP_HOST=${EMAIL_SMTP_HOST}
+      - EMAIL_SMTP_PORT=${EMAIL_SMTP_PORT}
+      - EMAIL_SMTP_SECURE=${EMAIL_SMTP_SECURE}
+      - EMAIL_SMTP_USER=${EMAIL_SMTP_USER}
+      - EMAIL_SMTP_PASSWORD=${EMAIL_SMTP_PASSWORD}
+      - EMAIL_SMTP_ALLOW_INVALID_CERT=${EMAIL_SMTP_ALLOW_INVALID_CERT}
+      - EMAIL_SMTP_SENDER_NAME=${EMAIL_SMTP_SENDER_NAME}
+      - EMAIL_SMTP_SENDER_EMAIL=${EMAIL_SMTP_SENDER_EMAIL}
+      - ALLOW_MULTIPLE_ORGS=${ALLOW_MULTIPLE_ORGS:-false}
+    volumes:
+      - "${LIGHTDASH_DBT_PROJECT_DIR}:/usr/app/dbt"
+      - "${LIGHTDASH_DBT_TARGET_DIR}:/usr/app/dbt/target"
+    ports:
+      - ${PORT:-8080}:${PORT:-8080}
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${LIGHTDASH_PGPASSWORD}
+      POSTGRES_USER: ${LIGHTDASH_PGUSER:-postgres}
+      POSTGRES_DB: ${LIGHTDASH_PGDATABASE:-postgres}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:

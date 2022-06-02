@@ -1,0 +1,95 @@
+version: 1
+default_environment: dev
+send_anonymous_usage_stats: false
+plugins:
+  extractors:
+  - name: tap-csv
+    variant: meltanolabs
+    pip_url: git+https://github.com/MeltanoLabs/tap-csv.git
+  loaders:
+  - name: target-postgres
+    variant: transferwise
+    pip_url: pipelinewise-target-postgres
+  transformers:
+  - name: dbt-postgres
+    pip_url: dbt-core~=1.0.0 dbt-postgres~=1.0.0
+  utilities:
+  - name: lightdash
+    namespace: lightdash
+    settings_group_validation: ["pgpassword", "secret"]
+    settings:
+    - name: pgpassword
+      label: Postgres Password
+      description: Password for PGUSER, used to store Lightdash data.
+      kind: password
+      value: admin
+    - name: secret
+      label: Secret
+      description: Secret key used to secure various tokens in Lightdash. This must be fixed between deployments. If the secret changes, you won't have access to Lightdash data.
+      kind: password
+    - name: pghost
+      label: Postgres Host
+      description: Hostname of postgres server to store Lightdash data.
+    - name: pgport
+      label: Postgres Port
+      description: Port of postgres server to store Lightdash data.
+      value: 5432
+    - name: pguser
+      label: Postgres User
+      description: Username of postgres user to access postgres server to store Lightdash data
+      value: admin
+    - name: pgdatabase
+      label: Postgres Database
+      description: Database name inside postgres server to store Lightdash data.
+      value: postgres
+    - name: dbt_project_dir
+      label: dbt Project Directory
+      description: The path to your local dbt project.
+      value: ../../transform
+    - name: dbt_target_dir
+      label: dbt Target Directory
+      description: The path to your dbt target directory.
+      value: ../../.meltano/transformers/dbt/target
+    commands:
+      ui:
+        args: compose -f analysis/lightdash/docker-compose.yml up
+        executable: /usr/local/bin/docker
+      down:
+        args: compose -f analysis/lightdash/docker-compose.yml stop
+        executable: /usr/local/bin/docker
+environments:
+- name: dev
+  config:
+    plugins:
+      extractors:
+      - name: tap-csv
+        config:
+          files:
+          - entity: customers
+            path: /Users/pnadolny/Documents/Git/GitHub/pnadolny/meltano_example_implementations/meltano_projects/e2e_lightdash/data/customers.csv
+            keys:
+            - id
+          - entity: orders
+            path: /Users/pnadolny/Documents/Git/GitHub/pnadolny/meltano_example_implementations/meltano_projects/e2e_lightdash/data/orders.csv
+            keys:
+            - id
+          - entity: payments
+            path: /Users/pnadolny/Documents/Git/GitHub/pnadolny/meltano_example_implementations/meltano_projects/e2e_lightdash/data/payments.csv
+            keys:
+            - id
+      loaders:
+      - name: target-postgres
+        config:
+          user: meltano
+          dbname: warehouse
+          default_target_schema: public
+      transformers:
+      - name: dbt-postgres
+        config:
+          host: localhost
+          user: meltano
+          port: 5432
+          dbname: warehouse
+          schema: analytics
+- name: staging
+- name: prod
