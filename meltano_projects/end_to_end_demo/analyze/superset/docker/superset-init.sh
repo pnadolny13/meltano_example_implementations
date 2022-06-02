@@ -29,7 +29,7 @@ fi
 # Always install local overrides first
 #
 
-REQUIREMENTS_LOCAL="/app/meltano/docker/requirements-local.txt"
+REQUIREMENTS_LOCAL="/app/superset_home/requirements-local.txt"
 #
 # Make sure we have dev requirements installed
 #

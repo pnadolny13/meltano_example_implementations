@@ -2,6 +2,8 @@
   "plugin_type": "utilities",
   "name": "superset",
   "namespace": "superset",
+  "pip_url": "apache-superset==1.5.0 markupsafe==2.0.1",
+  "executable": "superset",
   "settings": [
     {
       "name": "tables",
@@ -37,10 +39,11 @@
   ],
   "commands": {
     "ui": {
-      "args": "superset",
+      "args": "analyze/superset/scratch/superset-init.sh",
+      "executable": "/bin/bash",
       "container_spec": {
-        "image": "apache/superset:latest",
-        "entrypoint": "/app/meltano/docker/docker-init-full.sh",
+        "image": "apache/superset:1.5.0",
+        "entrypoint": "/app/meltano/docker/superset-init.sh",
         "ports": {
           "8088": "8088/tcp"
         },

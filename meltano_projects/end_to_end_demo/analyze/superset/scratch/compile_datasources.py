@@ -5,7 +5,7 @@ import yaml
 
 
 def read_dbt_manifest():
-    local_filepath = f"/app/meltano/dbt/manifest.json"
+    local_filepath = f"/Users/pnadolny/Documents/Git/GitHub/pnadolny/meltano_example_implementations/meltano_projects/end_to_end_demo/.meltano/transformers/dbt/target/manifest.json"
     with open(local_filepath) as f:
         return json.load(f)
 
@@ -53,10 +53,10 @@ if os.getenv("SUPERSET_SYNC_ASSETS"):
         ]
     }
 
-    with open("/app/superset_home/datasources.yml", "w") as yaml_file:
+    with open("/Users/pnadolny/Documents/Git/GitHub/pnadolny/meltano_example_implementations/meltano_projects/end_to_end_demo/.meltano/run/superset/datasources.yml", "w") as yaml_file:
         yaml.dump(superset_data, yaml_file, default_flow_style=False)
 
-with open("/app/superset_home/requirements-local.txt", "w") as req_file:
+with open("/Users/pnadolny/Documents/Git/GitHub/pnadolny/meltano_example_implementations/meltano_projects/end_to_end_demo/.meltano/run/superset/requirements-local.txt", "w") as req_file:
     deps = "\n".join(json.loads(os.getenv("SUPERSET_ADDITIONAL_DEPENDENCIES", os.getenv("SUPERSET_DOCKER_ADDITIONAL_DEPENDENCIES", "[]"))))
     content = f"# Add database driver dependencies here https://superset.apache.org/docs/databases/installing-database-drivers\n{deps}"
     req_file.write(content)

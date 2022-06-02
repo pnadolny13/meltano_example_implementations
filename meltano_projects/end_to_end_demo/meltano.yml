@@ -21,6 +21,7 @@ plugins:
     pip_url: git+https://gitlab.com/meltano/files-airflow.git
   utilities:
   - name: superset
+    pip_url: apache-superset==1.5.0 markupsafe==2.0.1
 environments:
 - name: dev
   config:
@@ -63,5 +64,7 @@ environments:
           - model.my_meltano_project.customers
           - model.my_meltano_project.orders
           sync_assets: true
+          additional_dependencies:
+          - psycopg2==2.9.3
 - name: staging
 - name: prod
